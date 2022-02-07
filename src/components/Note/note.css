@@ -1,0 +1,19 @@
+.note-container {
+	width: auto;
+	height: auto;
+	text-align: left;
+	padding: 5px;
+	display: flex;
+	flex-direction: column;
+	transition: ease-in;
+	transition-duration: 500ms;
+}
+
+.title-input-edit {
+	font-family: "Roboto Mono", monospace !important;
+	font-weight: bold !important;
+}
+
+.content-input-edit {
+	font-family: "Roboto Mono", monospace !important;
+}
