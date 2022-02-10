@@ -1,11 +1,15 @@
 let notesId = 0;
 export const initialState = {
 	notes: [],
+	authCreds: null,
 };
 //CRUD operations
 export const notesreducer = (state, action) => {
 	let newState = { ...state };
 	switch (action.type) {
+		case "SET_USER_DATA":
+			newState.authCreds = action.data;
+			return newState;
 		case "CREATE_NOTE":
 			const note = {
 				id: notesId,

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, TextField, Button } from "@mui/material";
+import { useNotesContextValue } from "../../context/NotesContext";
 import axios from "axios";
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	let navigate = useNavigate();
+	const [, dispatch] = useNotesContextValue();
 	const handleForm = (e) => {
 		axios
 			.post("/api/login", {
@@ -14,6 +16,7 @@ const Login = () => {
 			})
 			.then((data) => {
 				if (data.data.isLoggedIn === true) {
+					localStorage.setItem("token", data.data.token);
 					navigate("/home");
 				} else {
 					console.log("not authorized");

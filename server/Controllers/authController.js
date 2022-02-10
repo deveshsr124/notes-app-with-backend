@@ -1,6 +1,5 @@
 import { User } from "../Model/UserModel.js";
 import bcrypt from "bcrypt";
-import Joi from "joi";
 import jwt from "jsonwebtoken";
 import { registerValidation, loginValidation } from "../validation.js";
 
@@ -52,4 +51,21 @@ export const logout = async (req, res) => {
 	res.status(200).json({
 		message: "Logged Out Successfully",
 	});
+};
+
+export const verifyToken = (req, res) => {
+	const cookie = req.headers.cookie ? req.headers.cookie.split("=")[1] : "";
+	if (cookie !== "") {
+		jwt.verify(cookie, process.env.TOKEN_SECRET, async (err, decoded) => {
+			if (err) {
+				res.status(200).json({ isLoggedIn: false });
+			} else {
+				const user = await User.findOne({ _id: decoded._id });
+
+				res.status(200).json({ isLoggedIn: true, user });
+			}
+		});
+	} else {
+		res.status(200).json({ isLoggedIn: false });
+	}
 };

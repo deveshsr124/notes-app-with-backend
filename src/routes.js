@@ -1,22 +1,19 @@
 import React from "react";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Register from "./components/Signup";
 import Login from "./components/Login";
 import Home from "./components/mainbody";
-const Routers = () => {
+
+const RouterComponent = () => {
 	return (
-		<div>
-			<Router>
-				<div>
-					<Routes>
-						<Route exact path="/" element={<Register />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/home" element={<Home />} />
-					</Routes>
-				</div>
-			</Router>
-		</div>
+		<Routes>
+			<React.Fragment>
+				<Route exact path="/" element={<Register />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/home" element={<Home />} />
+			</React.Fragment>
+		</Routes>
 	);
 };
 
-export default Routers;
+export default RouterComponent;

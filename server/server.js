@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { config } from "dotenv";
 // import router
 import authRouter from "./Router/authRouter.js";
-import userRouter from "./Router/userRouter.js";
+import notesRouter from "./Router/notesRouter.js";
 const app = express();
 const PORT = 3001;
 
@@ -19,7 +19,7 @@ app.use(json());
 // you can use the router here like this
 app.use("/api", authRouter);
 
-app.use("/api", userRouter);
+app.use("/api", notesRouter);
 
 // server config
 app.listen(PORT, () => {

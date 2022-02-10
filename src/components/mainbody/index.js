@@ -15,11 +15,11 @@ const Home = () => {
 			return val;
 		}
 	};
-	useEffect(() => {
-		axios.get("/api/all-users", {
-			withCredentials: true,
-		});
-	}, []);
+	// useEffect(() => {
+	// 	axios.get("/api/all-users", {
+	// 		withCredentials: true,
+	// 	});
+	// }, []);
 	return (
 		<div>
 			<Header searchTerm={searchterm} setSearchTerm={setSearchTerm} />

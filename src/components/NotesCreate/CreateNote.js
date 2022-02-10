@@ -1,7 +1,7 @@
 import React from "react";
 import { InputBase, Button, Box } from "@mui/material";
 import "./textbox.css";
-
+import axios from "axios";
 const NotesCreate = ({
 	setInFocus,
 	title,
@@ -10,6 +10,36 @@ const NotesCreate = ({
 	dispatch,
 	setTitle,
 }) => {
+	const createNote = async () => {
+		const { data } = await axios.post(
+			"/api/create-notes",
+			{
+				title: title,
+				content: content,
+			},
+			{
+				headers: {
+					withCredentials: true,
+				},
+			}
+		);
+		try {
+			if (data.status === 200) {
+				dispatch({
+					type: "CREATE_NOTE",
+					title: data.data.title,
+					content: data.data.content,
+				});
+				setTitle("");
+				setContent("");
+				setInFocus(false);
+			} else {
+				console.log("error");
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
 	return (
 		<div
 			style={{
@@ -43,16 +73,7 @@ const NotesCreate = ({
 								background: "#FBBC04",
 							},
 						}}
-						onClick={() => {
-							dispatch({
-								type: "CREATE_NOTE",
-								title,
-								content,
-							});
-							setTitle("");
-							setContent("");
-							setInFocus(false);
-						}}
+						onClick={createNote}
 					>
 						Add
 					</Button>
@@ -63,10 +84,8 @@ const NotesCreate = ({
 						sx={{
 							width: "100px",
 							marginRight: "10px",
-
 							fontWeight: "bold",
 						}}
-						onClick={() => {}}
 					>
 						Add
 					</Button>

@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -8,7 +9,9 @@ import { NotesContextProvider } from "./context/NotesContext";
 ReactDOM.render(
 	<React.StrictMode>
 		<NotesContextProvider initialState={initialState} reducer={notesreducer}>
-			<App />
+			<Router>
+				<App />
+			</Router>
 		</NotesContextProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
