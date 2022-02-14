@@ -4,21 +4,62 @@ import "./note.css";
 import Toolbar from "../toolbar";
 import ContentTitle from "./ContentTitle";
 import ContentText from "./ContentText";
+import axios from "axios";
 const Note = ({ note, dispatch, id }) => {
 	const [ishovered, setIsHovered] = useState(false);
 	const [isedit, setIsEdit] = useState(false);
 	const [title, setTitle] = useState(note.title);
 	const [content, setContent] = useState(note.content);
-	const handleClickAway = () => {
+	const [editmode, setEditMode] = useState(false);
+	const handleClickAway = async () => {
+		setEditMode(false);
 		setIsEdit(false);
-		dispatch({
-			type: "EDIT_NOTE",
-			payload: {
-				id,
-				title,
-				content,
+		console.log("updated");
+		const { data } = await axios.patch(
+			`/api/update-notes/${id}`,
+			{
+				title: title,
+				content: content,
 			},
-		});
+			{
+				headers: {
+					withCredentials: true,
+				},
+			}
+		);
+		console.log("data", data);
+		try {
+			if (data.status === 200) {
+				dispatch({
+					type: "EDIT_NOTE",
+					payload: {
+						id,
+						title,
+						content,
+					},
+				});
+			} else {
+				console.log("not updated");
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	const handleTitleChange = (e) => {
+		setTitle(e.target.value);
+		if (e.target.value === "") {
+			setEditMode(false);
+		} else {
+			setEditMode(true);
+		}
+	};
+	const handleContentChange = (e) => {
+		setContent(e.target.value);
+		if (e.target.value === "") {
+			setEditMode(false);
+		} else {
+			setEditMode(true);
+		}
 	};
 	return (
 		<div>
@@ -33,19 +74,21 @@ const Note = ({ note, dispatch, id }) => {
 				}}
 			>
 				<Box sx={{ padding: "5px" }}>
-					<ClickAwayListener onClickAway={handleClickAway}>
+					<ClickAwayListener
+						onClickAway={editmode ? handleClickAway : () => {}}
+					>
 						<div onClick={() => setIsEdit(true)}>
 							<div>
 								<ContentTitle
 									isedit={isedit}
 									title={title}
-									setTitle={setTitle}
+									handleTitleChange={handleTitleChange}
 									note={note}
 								/>
 								<ContentText
 									isedit={isedit}
 									content={content}
-									setContent={setContent}
+									handleContentChange={handleContentChange}
 									note={note}
 								/>
 							</div>

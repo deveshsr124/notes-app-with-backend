@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Stack, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Stack, TextField, Button, Paper, Typography } from "@mui/material";
 import axios from "axios";
+import "./signup.css";
 const Register = () => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	let navigate = useNavigate();
 	const handleForm = (e) => {
 		e.preventDefault();
 		axios
@@ -13,7 +16,14 @@ const Register = () => {
 				email,
 				password,
 			})
-			.then((data) => console.log(data));
+			.then((data) => {
+				if (data.data.isLoggedIn === true) {
+					localStorage.setItem("token", data.data.token);
+					navigate("/home");
+				} else {
+					console.log("not authorized");
+				}
+			});
 	};
 	return (
 		<div
@@ -21,35 +31,48 @@ const Register = () => {
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center",
-				marginTop: "10%",
+				marginTop: "8%",
 			}}
 		>
-			<Stack spacing={2}>
-				<TextField
-					required
-					id="outlined-required"
-					label="Name"
-					value={name}
-					onChange={(e) => setName(e.target.value)}
-				/>
-				<TextField
-					required
-					id="outlined-required"
-					label="Email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<TextField
-					required
-					id="outlined-required"
-					label="Password"
-					value={password}
-					onChangeCapture={(e) => setPassword(e.target.value)}
-				/>
-				<Button variant="contained" onClick={handleForm}>
-					Register
-				</Button>
-			</Stack>
+			<Paper isHovered={5} className="signup-container">
+				<Stack spacing={2}>
+					<TextField
+						required
+						id="outlined-required"
+						label="Name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+					/>
+					<TextField
+						required
+						id="outlined-required"
+						label="Email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+					<TextField
+						required
+						id="outlined-required"
+						label="Password"
+						value={password}
+						onChangeCapture={(e) => setPassword(e.target.value)}
+					/>
+					<Button variant="contained" onClick={handleForm}>
+						Register
+					</Button>
+					<Typography
+						fontWeight="bold"
+						color="#FBBC04"
+						textAlign="center"
+						sx={{ cursor: "pointer" }}
+						onClick={() => {
+							navigate("/login");
+						}}
+					>
+						Click here to Login
+					</Typography>
+				</Stack>
+			</Paper>
 		</div>
 	);
 };

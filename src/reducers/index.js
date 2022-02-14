@@ -10,6 +10,9 @@ export const notesreducer = (state, action) => {
 		case "SET_USER_DATA":
 			newState.authCreds = action.data;
 			return newState;
+		case "GET_ALL_NOTES":
+			newState.notes = action.payload;
+			return newState;
 		case "CREATE_NOTE":
 			const note = {
 				id: notesId,
@@ -20,7 +23,7 @@ export const notesreducer = (state, action) => {
 			return { ...state, notes: [...state.notes, note] };
 		case "EDIT_NOTE":
 			newState.notes = newState.notes.filter((data) => {
-				return data.id === action.payload.id
+				return data._id === action.payload.id
 					? ((data.title = action.payload.title),
 					  (data.content = action.payload.content))
 					: { ...data };
@@ -28,7 +31,7 @@ export const notesreducer = (state, action) => {
 			return newState;
 		case "DELETE_NOTE":
 			newState.notes = newState.notes.filter((data) => {
-				return data.id !== action.payload;
+				return data._id !== action.payload;
 			});
 			return newState;
 		default:

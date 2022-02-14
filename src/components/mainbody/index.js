@@ -15,11 +15,25 @@ const Home = () => {
 			return val;
 		}
 	};
-	// useEffect(() => {
-	// 	axios.get("/api/all-users", {
-	// 		withCredentials: true,
-	// 	});
-	// }, []);
+	useEffect(() => {
+		getNotes();
+	}, []);
+	const getNotes = async () => {
+		const { data } = await axios.get("/api/all-notes", {
+			withCredentials: true,
+		});
+		try {
+			data.notes !== []
+				? dispatch({
+						type: "GET_ALL_NOTES",
+						payload: data.notes,
+				  })
+				: console.log("no notes found ");
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	console.log("notes", notes);
 	return (
 		<div>
 			<Header searchTerm={searchterm} setSearchTerm={setSearchTerm} />
@@ -38,8 +52,8 @@ const Home = () => {
 						.filter((val) => searchFilter(val))
 						.map((item) => {
 							return (
-								<Grid item xs={12} sm={4} md={3} key={item.id}>
-									<Note note={item} dispatch={dispatch} id={item.id} />
+								<Grid item xs={12} sm={4} md={3} key={item._id}>
+									<Note note={item} dispatch={dispatch} id={item._id} />
 								</Grid>
 							);
 						})}

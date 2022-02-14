@@ -29,3 +29,43 @@ export const getAllNotes = async (req, res) => {
 		res.status(400).send(err);
 	}
 };
+
+export const updateNote = async (req, res) => {
+	try {
+		const notes = {
+			title: req.body.title,
+			content: req.body.content,
+		};
+		const updatedNote = await Notes.findOneAndUpdate(
+			{
+				_id: req.params.id,
+			},
+			notes
+		);
+		res.status(200).json({
+			message: "Notes Updated Successfully",
+			status: 200,
+			notes,
+		});
+	} catch (err) {
+		res.status(400).send(err);
+	}
+};
+
+export const deleteNote = async (req, res) => {
+	try {
+		const deletednote = await Notes.findByIdAndDelete(req.params.id);
+		if (!req.params.id) {
+			res.status(400).json({
+				message: "note not found",
+			});
+		} else {
+			res.status(200).json({
+				message: "Note Deleted Successfully",
+				status: 200,
+			});
+		}
+	} catch (err) {
+		res.status(400).send(err);
+	}
+};

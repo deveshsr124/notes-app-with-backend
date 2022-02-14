@@ -19,7 +19,13 @@ export const register = async (req, res) => {
 	});
 	try {
 		const savedUser = await user.save();
-		res.send(savedUser);
+		const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
+		res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 });
+		res.status(200).json({
+			token: token,
+			isLoggedIn: true,
+			message: "Registered Successfully",
+		});
 	} catch (err) {
 		res.status(400).send(err);
 	}

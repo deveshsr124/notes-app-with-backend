@@ -1,7 +1,7 @@
 import React from "react";
 import { InputBase, Typography } from "@mui/material";
 import "./note.css";
-const ContentText = ({ isedit, content, setContent, note }) => {
+const ContentText = ({ isedit, content, handleContentChange, note }) => {
 	return (
 		<div>
 			{isedit ? (
@@ -11,7 +11,7 @@ const ContentText = ({ isedit, content, setContent, note }) => {
 					inputProps={{ "aria-label": "note content" }}
 					multiline={true}
 					value={content}
-					onChange={(e) => setContent(e.target.value)}
+					onChange={handleContentChange}
 				/>
 			) : (
 				<Typography
