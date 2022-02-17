@@ -1,29 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, TextField, Button } from "@mui/material";
-import { useNotesContextValue } from "../../context/NotesContext";
+import {
+	Stack,
+	TextField,
+	Button,
+	Paper,
+	CircularProgress,
+} from "@mui/material";
 import axios from "axios";
+import ErrorComponent from "../error";
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [emailerr, setEmailErr] = useState("");
+	const [passerr, setPassErr] = useState("");
+	const [isloading, setIsLoading] = useState(false);
 	let navigate = useNavigate();
-	const [, dispatch] = useNotesContextValue();
 	const handleForm = (e) => {
-		axios
-			.post("/api/login", {
-				email,
-				password,
-			})
-			.then((data) => {
-				if (data.data.isLoggedIn === true) {
-					localStorage.setItem("token", data.data.token);
-					navigate("/home");
-				} else {
-					console.log("not authorized");
-				}
-			});
+		setIsLoading(true);
+		if (email === "" && password === "") {
+			setIsLoading(false);
+			setEmailErr("Email should not be empty");
+			setPassErr("Password should not be empty");
+		} else {
+			axios
+				.post("/api/login", {
+					email,
+					password,
+				})
+				.then((data) => {
+					setIsLoading(false);
+					if (data.data.isLoggedIn === true) {
+						localStorage.setItem("token", data.data.token);
+						navigate("/home");
+					} else {
+						setPassErr(data.data);
+					}
+				});
+		}
+	};
+	const handleEmail = (e) => {
+		setEmail(e.target.value.replace(/ /g, ""));
+		setEmailErr("");
 	};
 
+	const handlePass = (e) => {
+		setPassword(e.target.value.replace(/ /g, ""));
+		setPassErr("");
+	};
 	return (
 		<div
 			style={{
@@ -33,25 +57,49 @@ const Login = () => {
 				marginTop: "10%",
 			}}
 		>
-			<Stack spacing={2}>
-				<TextField
-					required
-					id="outlined-required"
-					label="Email"
-					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-				<TextField
-					required
-					id="outlined-required"
-					label="Password"
-					value={password}
-					onChangeCapture={(e) => setPassword(e.target.value)}
-				/>
-				<Button variant="contained" onClick={handleForm}>
-					Submit
-				</Button>
-			</Stack>
+			<Paper ishovered={5} className="signup-container">
+				<Stack spacing={2}>
+					{emailerr !== "" ? (
+						<ErrorComponent
+							helperText={emailerr}
+							value={email}
+							onChange={handleEmail}
+						/>
+					) : (
+						<TextField
+							required
+							id="outlined-required"
+							label="Email"
+							value={email}
+							onChange={handleEmail}
+						/>
+					)}
+					{passerr !== "" ? (
+						<ErrorComponent
+							helperText={passerr}
+							value={password}
+							onChange={handlePass}
+						/>
+					) : (
+						<TextField
+							required
+							id="outlined-required"
+							label="Password"
+							value={password}
+							onChangeCapture={handlePass}
+						/>
+					)}
+					{isloading ? (
+						<Button variant="outlined">
+							<CircularProgress size={25} />
+						</Button>
+					) : (
+						<Button variant="outlined" onClick={handleForm} loading>
+							Login
+						</Button>
+					)}
+				</Stack>
+			</Paper>
 		</div>
 	);
 };

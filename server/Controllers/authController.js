@@ -42,14 +42,18 @@ export const login = async (req, res) => {
 	// checking for invalid password
 	const validPass = await bcrypt.compare(req.body.password, user.password);
 	if (!validPass) return res.status(200).send("Invalid Password");
+	try {
+		const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
+		res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 });
+		res.status(200).json({
+			token: token,
+			isLoggedIn: true,
+			message: "logged in successfully",
+		});
+	} catch (err) {
+		res.status(400).send(err);
+	}
 	// creating tokens
-	const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
-	res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 });
-	res.status(200).json({
-		token: token,
-		isLoggedIn: true,
-		message: "logged in successfully",
-	});
 };
 
 export const logout = async (req, res) => {
