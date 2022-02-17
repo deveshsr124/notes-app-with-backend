@@ -7,11 +7,18 @@ import path from "path";
 import authRouter from "./Router/authRouter.js";
 import notesRouter from "./Router/notesRouter.js";
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT ||3001;
 
 config();
 // connect with mongodb database
-mongoose.connect(process.env.DB_CONNECT, () => console.log("connected to db"));
+mongoose
+	.connect(process.env.DB_CONNECT)
+	.then(() => {
+		app.listen(PORT, () => {
+			console.log(`mongoDb connected and server has been started at ${PORT}`);
+		}); 
+	})
+	.catch((err) => console.log("error in connecting in db"));
 
 //middlewares
 app.use(json());
@@ -20,11 +27,14 @@ app.use(cors());
 app.use("/api", authRouter);
 
 app.use("/api", notesRouter);
-app.use(express.static(path.join(__dirname, "../build")));
-app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "../build"));
-});
+//serving the build folder
+app.use(express.static("../build"));
 // server config
-app.listen(PORT, () => {
-	console.log(`server is running at ${PORT}`);
+
+app.get("*", (req, res) => {
+	res.redirect("/");
+});
+
+app.use((req, res) => {
+	res.status(404).send("404 page found");
 });
