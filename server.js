@@ -7,7 +7,7 @@ import path from "path";
 import authRouter from "./Router/authRouter.js";
 import notesRouter from "./Router/notesRouter.js";
 const app = express();
-const PORT = process.env.PORT ||3001;
+const PORT = process.env.PORT || 3001;
 
 config();
 // connect with mongodb database
@@ -16,7 +16,7 @@ mongoose
 	.then(() => {
 		app.listen(PORT, () => {
 			console.log(`mongoDb connected and server has been started at ${PORT}`);
-		}); 
+		});
 	})
 	.catch((err) => console.log("error in connecting in db"));
 
@@ -28,7 +28,13 @@ app.use("/api", authRouter);
 
 app.use("/api", notesRouter);
 //serving the build folder
-app.use(express.static("../build"));
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static("client/build"));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+	});
+}
+
 // server config
 
 app.get("*", (req, res) => {
