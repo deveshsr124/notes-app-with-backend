@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import {
 	Stack,
 	TextField,
@@ -133,18 +133,11 @@ const Register = () => {
 							Register
 						</Button>
 					)}
-
-					<Typography
-						fontWeight="bold"
-						color="#FBBC04"
-						textAlign="center"
-						sx={{ cursor: "pointer" }}
-						onClick={() => {
-							navigate("/login");
-						}}
-					>
-						Click here to Login
-					</Typography>
+					<Link to={"/login"} style={{ textDecoration: "none" }}>
+						<Typography fontWeight="bold" color="#FBBC04" textAlign="center">
+							Click here to Login
+						</Typography>
+					</Link>
 				</Stack>
 			</Paper>
 		</div>

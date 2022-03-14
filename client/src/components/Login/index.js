@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import {
 	Stack,
 	TextField,
 	Button,
 	Paper,
 	CircularProgress,
+	Typography,
 } from "@mui/material";
 import axios from "axios";
 import ErrorComponent from "../error";
@@ -101,6 +102,11 @@ const Login = () => {
 							Login
 						</Button>
 					)}
+					<Link to={"/"} style={{textDecoration:'none'}}>
+						<Typography color="#FBBC04" textAlign="center">
+							Click here to Register If you have haven't
+						</Typography>
+					</Link>
 				</Stack>
 			</Paper>
 		</div>
