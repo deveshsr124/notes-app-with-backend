@@ -3,7 +3,7 @@ import { Paper, InputBase } from "@mui/material";
 import "./textbox.css";
 import CreateNote from "./CreateNote";
 import { useNotesContextValue } from "../../context/NotesContext";
-const NotesCreate = () => {
+const NotesCreate = ({ setIsLoading }) => {
 	const [infocus, setInFocus] = useState(false);
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
@@ -27,6 +27,7 @@ const NotesCreate = () => {
 						content={content}
 						setContent={setContent}
 						dispatch={dispatch}
+						setIsLoading={setIsLoading}
 					/>
 				) : null}
 			</Paper>

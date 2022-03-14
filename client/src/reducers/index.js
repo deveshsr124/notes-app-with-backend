@@ -15,11 +15,10 @@ export const notesreducer = (state, action) => {
 			return newState;
 		case "CREATE_NOTE":
 			const note = {
-				id: notesId,
+				_id: action._id,
 				title: action.title,
 				content: action.content,
 			};
-			notesId += 1;
 			return { ...state, notes: [...state.notes, note] };
 		case "EDIT_NOTE":
 			newState.notes = newState.notes.filter((data) => {

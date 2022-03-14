@@ -14,7 +14,14 @@ const Note = ({ note, dispatch, id }) => {
 	const handleClickAway = async () => {
 		setEditMode(false);
 		setIsEdit(false);
-		console.log("updated");
+		dispatch({
+			type: "EDIT_NOTE",
+			payload: {
+				id,
+				title,
+				content,
+			},
+		});
 		const { data } = await axios.patch(
 			`/api/update-notes/${id}`,
 			{
@@ -27,17 +34,8 @@ const Note = ({ note, dispatch, id }) => {
 				},
 			}
 		);
-		console.log("data", data);
 		try {
 			if (data.status === 200) {
-				dispatch({
-					type: "EDIT_NOTE",
-					payload: {
-						id,
-						title,
-						content,
-					},
-				});
 			} else {
 				console.log("not updated");
 			}

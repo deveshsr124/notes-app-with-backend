@@ -1,5 +1,5 @@
-import React from "react";
-import { InputBase, Button, Box } from "@mui/material";
+import React, { useState } from "react";
+import { InputBase, Button, Box, CircularProgress } from "@mui/material";
 import "./textbox.css";
 import axios from "axios";
 const NotesCreate = ({
@@ -9,8 +9,11 @@ const NotesCreate = ({
 	setContent,
 	dispatch,
 	setTitle,
+	setIsLoading,
 }) => {
+	const [load, setIsLoad] = useState(false);
 	const createNote = async () => {
+		setIsLoad(true);
 		const { data } = await axios.post(
 			"/api/create-notes",
 			{
@@ -25,8 +28,10 @@ const NotesCreate = ({
 		);
 		try {
 			if (data.status === 200) {
+				setIsLoad(false);
 				dispatch({
 					type: "CREATE_NOTE",
+					_id: data.data._id,
 					title: data.data.title,
 					content: data.data.content,
 				});
@@ -62,21 +67,43 @@ const NotesCreate = ({
 			/>
 			<Box display="flex" justifyContent="right" mt="10px" width="95%">
 				{title !== "" || content !== "" ? (
-					<Button
-						variant="contained"
-						sx={{
-							width: "100px",
-							marginRight: "10px",
-							backgroundColor: "#FBBC04",
-							fontWeight: "bold",
-							"&:hover": {
-								background: "#FBBC04",
-							},
-						}}
-						onClick={createNote}
-					>
-						Add
-					</Button>
+					<React.Fragment>
+						{load ? (
+							<Button
+								variant="contained"
+								sx={{
+									width: "100px",
+									marginRight: "10px",
+									backgroundColor: "#FBBC04",
+									fontWeight: "bold",
+									"&:hover": {
+										background: "#FBBC04",
+									},
+								}}
+							>
+								<CircularProgress
+									size={18}
+									sx={{ color: "white", fontWeight: "bold" }}
+								/>
+							</Button>
+						) : (
+							<Button
+								variant="contained"
+								sx={{
+									width: "100px",
+									marginRight: "10px",
+									backgroundColor: "#FBBC04",
+									fontWeight: "bold",
+									"&:hover": {
+										background: "#FBBC04",
+									},
+								}}
+								onClick={createNote}
+							>
+								Add
+							</Button>
+						)}
+					</React.Fragment>
 				) : (
 					<Button
 						variant="contained"

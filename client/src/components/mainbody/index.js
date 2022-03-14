@@ -6,6 +6,7 @@ import NotesCreate from "../NotesCreate";
 import Note from "../Note";
 import { Grid, Box, Skeleton } from "@mui/material";
 import axios from "axios";
+import Loader from "../loader";
 const Home = () => {
 	const [{ notes }, dispatch] = useNotesContextValue();
 	const [searchterm, setSearchTerm] = useState("");
@@ -46,17 +47,22 @@ const Home = () => {
 			<div
 				style={{ marginTop: "10%", display: "flex", justifyContent: "center" }}
 			>
-				<NotesCreate />
+				<NotesCreate setIsLoading={setIsLoading} />
 			</div>
 
 			{isloading ? (
 				<Box
+					marginLeft="5%"
 					marginTop="5%"
+					marginRight="5%"
 					display="flex"
+					justifyContent="space-between"
 					alignItems="center"
-					justifyContent="center"
 				>
-					<Skeleton variant="rectangular" width={210} height={118} />
+					<Loader />
+					<Loader />
+					<Loader />
+					<Loader />
 				</Box>
 			) : (
 				<Box marginLeft="5%" marginTop="5%" marginRight="5%">

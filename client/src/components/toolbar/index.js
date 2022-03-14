@@ -1,9 +1,11 @@
-import React from "react";
-import { Box } from "@mui/material";
+import React, { useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
 import { DeleteOutlined } from "@mui/icons-material";
 import axios from "axios";
 const Toolbar = ({ dispatch, id, title, content }) => {
+	const [load, setIsLoad] = useState(false);
 	const deleteNote = async () => {
+		setIsLoad(true);
 		const { data } = await axios.delete(
 			`/api/delete-note/${id}`,
 			{},
@@ -14,12 +16,13 @@ const Toolbar = ({ dispatch, id, title, content }) => {
 			}
 		);
 		try {
-			data.status === 200
-				? dispatch({
-						type: "DELETE_NOTE",
-						payload: id,
-				  })
-				: console.log("error occured ");
+			if (data.status === 200) {
+				setIsLoad(false);
+				dispatch({
+					type: "DELETE_NOTE",
+					payload: id,
+				});
+			}
 		} catch (err) {
 			console.log(err);
 		}
@@ -34,7 +37,11 @@ const Toolbar = ({ dispatch, id, title, content }) => {
 					cursor: "pointer",
 				}}
 			>
-				<DeleteOutlined sx={{ fontSize: "22px" }} onClick={deleteNote} />
+				{load ? (
+					<CircularProgress size={22} sx={{ color: "black" }} />
+				) : (
+					<DeleteOutlined sx={{ fontSize: "22px" }} onClick={deleteNote} />
+				)}
 			</Box>
 		</div>
 	);

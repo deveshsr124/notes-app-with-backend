@@ -1,10 +1,7 @@
 import { Notes } from "../Model/NotesModel.js";
 
 export const createNotes = async (req, res) => {
-	const user = new Notes({
-		title: req.body.title,
-		content: req.body.content,
-	});
+	const user = new Notes(req.body);
 	try {
 		const savedUser = await user.save();
 		const data = await Notes.findById(savedUser._id).populate("id");
@@ -20,7 +17,7 @@ export const createNotes = async (req, res) => {
 
 export const getAllNotes = async (req, res) => {
 	try {
-		const notes = await Notes.find();
+		const notes = await Notes.find().populate("id");
 		res.status(200).json({
 			status: 200,
 			notes,
@@ -41,7 +38,7 @@ export const updateNote = async (req, res) => {
 				_id: req.params.id,
 			},
 			notes
-		);
+		).populate("id");
 		res.status(200).json({
 			message: "Notes Updated Successfully",
 			status: 200,

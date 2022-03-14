@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const noteSchema = mongoose.Schema(
 	{
 		id: {
-			type: mongoose.Schema.Types.ObjectId,
+			type: mongoose.Types.ObjectId,
 			ref: "User",
 		},
 		title: {
@@ -12,7 +12,6 @@ const noteSchema = mongoose.Schema(
 		},
 		content: {
 			type: String,
-			required: true,
 		},
 	},
 	{

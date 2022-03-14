@@ -19,8 +19,10 @@ export const register = async (req, res) => {
 	});
 	try {
 		const savedUser = await user.save();
-		const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
-		res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 });
+		const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET, {
+			expiresIn: "12h",
+		});
+		res.cookie("jwt", token);
 		res.status(200).json({
 			token: token,
 			isLoggedIn: true,
@@ -43,8 +45,10 @@ export const login = async (req, res) => {
 	const validPass = await bcrypt.compare(req.body.password, user.password);
 	if (!validPass) return res.status(200).send("Invalid Password");
 	try {
-		const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
-		res.cookie("jwt", token, { maxAge: 1000 * 60 * 60 });
+		const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET, {
+			expiresIn: "12h",
+		});
+		res.cookie("jwt", token);
 		res.status(200).json({
 			token: token,
 			isLoggedIn: true,

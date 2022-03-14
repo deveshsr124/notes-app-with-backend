@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import {
 	Stack,
 	TextField,
@@ -64,6 +64,9 @@ const Register = () => {
 		setName(e.target.value);
 		setNameErr("");
 	};
+	if (localStorage.getItem("token")) {
+		return <Navigate to="/home" />;
+	}
 	return (
 		<div
 			style={{

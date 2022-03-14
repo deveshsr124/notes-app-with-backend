@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import {
 	Stack,
 	TextField,
@@ -48,6 +48,9 @@ const Login = () => {
 		setPassword(e.target.value.replace(/ /g, ""));
 		setPassErr("");
 	};
+	if (localStorage.getItem("token")) {
+		return <Navigate to="/home" />;
+	}
 	return (
 		<div
 			style={{
