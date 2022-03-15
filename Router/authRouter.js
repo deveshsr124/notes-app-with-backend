@@ -5,11 +5,16 @@ import {
 	logout,
 	verifyToken,
 } from "../Controllers/authController.js";
+import { validationRules, validate } from "../validator/register-rules.js";
+import {
+	loginValidationRules,
+	loginValidate,
+} from "../validator/login-rules.js";
 
 const router = Router();
-router.post("/register", register);
+router.post("/register", validationRules(), validate, register);
 
-router.post("/login", login);
+router.post("/login", loginValidationRules(), loginValidate, login);
 
 router.post("/logout", logout);
 

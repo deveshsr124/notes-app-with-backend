@@ -9,7 +9,6 @@ import {
 	Typography,
 } from "@mui/material";
 import axios from "axios";
-import ErrorComponent from "../error";
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -17,27 +16,35 @@ const Login = () => {
 	const [passerr, setPassErr] = useState("");
 	const [isloading, setIsLoading] = useState(false);
 	let navigate = useNavigate();
-	const handleForm = (e) => {
+	const handleForm = async (e) => {
 		setIsLoading(true);
 		if (email === "" && password === "") {
 			setIsLoading(false);
-			setEmailErr("Email should not be empty");
-			setPassErr("Password should not be empty");
+			setEmailErr("Email required");
+			setPassErr("Password required");
 		} else {
-			axios
-				.post("/api/login", {
-					email,
-					password,
-				})
-				.then((data) => {
-					setIsLoading(false);
-					if (data.data.isLoggedIn === true) {
-						localStorage.setItem("token", data.data.token);
-						navigate("/home");
-					} else {
-						setPassErr(data.data);
-					}
-				});
+			const { data } = await axios.post("/api/login", {
+				email,
+				password,
+			});
+
+			if (data.isLoggedIn === true) {
+				setIsLoading(false);
+				navigate("/home");
+				localStorage.setItem("token", data.token);
+			} else {
+				setIsLoading(false);
+				if (data.errors.find((item, index) => item.param === "email")) {
+					setEmailErr(
+						data.errors.find((item, index) => item.param === "email").msg
+					);
+				}
+				if (data.errors.find((item, index) => item.param === "password")) {
+					setPassErr(
+						data.errors.find((item, index) => item.param === "password").msg
+					);
+				}
+			}
 		}
 	};
 	const handleEmail = (e) => {
@@ -63,46 +70,55 @@ const Login = () => {
 		>
 			<Paper ishovered={5} className="signup-container">
 				<Stack spacing={2}>
-					{emailerr !== "" ? (
-						<ErrorComponent
-							helperText={emailerr}
-							value={email}
-							onChange={handleEmail}
-						/>
-					) : (
-						<TextField
-							required
-							id="outlined-required"
-							label="Email"
-							value={email}
-							onChange={handleEmail}
-						/>
-					)}
-					{passerr !== "" ? (
-						<ErrorComponent
-							helperText={passerr}
-							value={password}
-							onChange={handlePass}
-						/>
-					) : (
-						<TextField
-							required
-							id="outlined-required"
-							label="Password"
-							value={password}
-							onChangeCapture={handlePass}
-						/>
-					)}
+					<TextField
+						required
+						id="outlined-required"
+						label="Email"
+						helperText={emailerr !== "" ? emailerr : ""}
+						error={emailerr !== "" ? true : false}
+						value={email}
+						onChange={handleEmail}
+					/>
+
+					<TextField
+						required
+						id="outlined-required"
+						label="Password"
+						helperText={passerr !== "" ? passerr : ""}
+						error={passerr !== "" ? true : false}
+						value={password}
+						onChangeCapture={handlePass}
+					/>
+
 					{isloading ? (
-						<Button variant="outlined">
-							<CircularProgress size={25} />
+						<Button
+							variant="contained"
+							sx={{
+								backgroundColor: "#FBBC04",
+								color: "white",
+								"&:hover": {
+									background: "#FBBC04",
+								},
+							}}
+						>
+							<CircularProgress size={25} sx={{ color: "white" }} />
 						</Button>
 					) : (
-						<Button variant="outlined" onClick={handleForm} loading>
+						<Button
+							variant="contained"
+							onClick={handleForm}
+							sx={{
+								backgroundColor: "#FBBC04",
+								color: "white",
+								"&:hover": {
+									background: "#FBBC04",
+								},
+							}}
+						>
 							Login
 						</Button>
 					)}
-					<Link to={"/"} style={{textDecoration:'none'}}>
+					<Link to={"/"} style={{ textDecoration: "none" }}>
 						<Typography color="#FBBC04" textAlign="center">
 							Click here to Register If you have haven't
 						</Typography>

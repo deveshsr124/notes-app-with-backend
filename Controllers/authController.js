@@ -1,11 +1,8 @@
 import { User } from "../Model/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { registerValidation, loginValidation } from "../validation.js";
 
 export const register = async (req, res) => {
-	const { error } = registerValidation(req.body);
-	if (error) return res.status(200).send(error.details[0].message);
 	// checking if email exists
 	const emailExist = await User.findOne({ email: req.body.email });
 	if (emailExist) return res.status(200).send("email already exists");
@@ -34,9 +31,6 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-	const { error } = loginValidation(req.body);
-	if (error) return res.status(200).send(error.details[0].message);
-
 	// checking if email exists
 	const user = await User.findOne({ email: req.body.email });
 	if (!user) return res.status(200).send("email not found");
