@@ -33,7 +33,9 @@ const Register = () => {
 				email,
 				password,
 			});
-
+			if (data === "email already exists") {
+				setEmailErr("Email already exists");
+			}
 			if (data.isLoggedIn === true) {
 				setIsLoading(false);
 				navigate("/home");

@@ -34,6 +34,12 @@ const Login = () => {
 				localStorage.setItem("token", data.token);
 			} else {
 				setIsLoading(false);
+				if (data === "email not found") {
+					setEmailErr("Email address doesn't exists");
+				}
+				if (data === "Invalid Password") {
+					setPassErr("Invalid password");
+				}
 				if (data.errors.find((item, index) => item.param === "email")) {
 					setEmailErr(
 						data.errors.find((item, index) => item.param === "email").msg
